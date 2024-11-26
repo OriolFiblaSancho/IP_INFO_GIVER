@@ -1,0 +1,67 @@
+<!--CSS REF (Using Pico)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
+<!--HTML-->
+<main class="container" style="width: 50%;">
+    <form id="form">
+        <label>
+        User IP
+            <input required id="input" type="text" placeholder="Enter IP Address">
+            <small>Example: 8.8.8.8</small>
+        </label> 
+        <button type="submit" id="submit">Search IP info</button>
+    </form>
+
+    <div>
+        <pre id="results">
+
+        </pre>
+    </div>
+</main>
+
+<!--JS SCRIPT-->
+<script>
+   
+
+    const OPTIONS = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': '1d94d726f5msh47d487e01dea20ap11dfb0jsn5c658f10fb0a',
+		'x-rapidapi-host': 'ip-lookup-threat-detection-api.p.rapidapi.com'
+	}
+};
+
+    const fetchIpInfo = ip => {
+        return fetch(`https://ip-lookup-threat-detection-api.p.rapidapi.com/bulk/${ip}`, OPTIONS)
+            .then(res => res.json())
+            .catch(err => console.error(err));
+    }       
+
+    const $ = selector => document.querySelector(selector);
+
+    const $form = $('#form');
+    const $input = $('#input');
+    const $submit = $('#submit');
+    const $results = $('#results');
+
+    $form.addEventListener("submit",async(event) => {
+        event.preventDefault();
+        const {value} = $input
+        if(!value) return;
+        
+        $submit.setAttribute('disabled', true);
+        $submit.setAttribute('aria-busy', true);
+
+        const ipInfo = await fetchIpInfo(value);
+
+        if(ipInfo) {
+            $results.innerHTML = JSON.stringify(ipInfo, null, 2);
+        }
+
+        $submit.removeAttribute('disabled');
+        $submit.removeAttribute('aria-busy');
+    });
+
+   
+    
+</script>
