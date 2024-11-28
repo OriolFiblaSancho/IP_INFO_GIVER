@@ -12,11 +12,36 @@
         <button type="submit" id="submit">Search IP info</button>
     </form>
 
-    <div>
-        <pre id="results">
+    <div class="results" style="display: inline; margin-left: 2%;">
+        <div id="location">
+            <div>
+                <p>Country: <span style="font-weight: 700;" id="country"></span></p>
+            </div>
+            <div>
+                <p>Region: <span style="font-weight: 700;" id="region"></span></p>
+            </div>
+            <div>
+                <p>City: <span  style="font-weight: 700;" id="city"></span></p>
+            </div>
+        </div>
 
-        </pre>
+        <div id="info">
+            <p>Domain: <span style="font-weight: 700;" id="domain"></span></p>
+        </div>
+
+        <div id="time">
+            <p>Timezone: <span style="font-weight: 700;" id="timezone"></span></p>
+        </div>
     </div>
+
+    <div class="full-results">
+        <details>
+            <summary>Full Results</summary>
+            <pre id="full-results"></pre>
+        </details>
+    </div>
+
+
 </main>
 
 <!--JS SCRIPT-->
@@ -53,9 +78,16 @@
         $submit.setAttribute('aria-busy', true);
 
         const ipInfo = await fetchIpInfo(value);
+        let data = ipInfo;
 
         if(ipInfo) {
-            $results.innerHTML = JSON.stringify(ipInfo, null, 2);
+            $('#country').innerHTML = data.results[0].data.location.country;
+            $('#region').innerHTML = data.results[0].data.location.region;
+            $('#city').innerHTML = data.results[0].data.location.city;
+            $('#domain').innerHTML = data.results[0].data.organization.domain;
+            $('#timezone').innerHTML = data.results[0].data.timezone.timezone;
+
+            $('#full-results').innerHTML = JSON.stringify(data, null, 2);
         }
 
         $submit.removeAttribute('disabled');
